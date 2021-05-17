@@ -753,10 +753,15 @@
 
       
         
-          Automatic Repeat reQuest
+          
+          ARQ是什么&nbsp; 
+自动重传请求（Automatic Repeat reQuest），从名字看来，虽然被称为一种协议，但是看起来像是一种策略
+
+ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输时，使用确认（Acknoledgements，就是我们常说的ACK，接收方发送一个消息，告诉发送方，自己是否正确接到了一个包体）和超时（Timeouts，在收到一个确认消息之前，等待的一个确定的时间段）机制，在不可靠的网络上，实现可靠的数据传输的错误控制方法。如果发送方在超时之前没有收到确认，通常会重新传输相应的包体，直到收到确认或者重试超过一定的次数。维基
+          ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2021/04/19/ARQ%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/">
+            <a class="btn" href="/2021/04/19/ARQ%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/#more" rel="contents">
               Read more &raquo;
             </a>
           </div>
