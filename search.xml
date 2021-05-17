@@ -57,6 +57,8 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
 ]]></content>
       <tags>
         <tag>mysql</tag>
+        <tag>binlog</tag>
+        <tag>mysql日志</tag>
       </tags>
   </entry>
   <entry>
