@@ -76,6 +76,11 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
 <h2 id="主从异步导致的数据丢失"><a href="#主从异步导致的数据丢失" class="headerlink" title="主从异步导致的数据丢失"></a>主从异步导致的数据丢失</h2><p><strong>问题：</strong>因为master-&gt;slave的复制是异步的，有可能部分没有来得及复制master就宕机了<br><strong>解决：</strong>配置min-slaves-max-lag=10（ 数据复制和同步的延迟不能超过10S），当我们的slave在数据复制的时候，发现返回的ACK时延太长达到了 min-slaves-max-lag 配置，这个时候就会认为如果master宕机就会导致大量数据丢失，提前进行了预测，就不再去接收客户端的任何请求了，来将丢失的数据降低在可控范围内。<br><img src="sovle.jpg" alt="solve"> </p>
 <h2 id="脑裂导致的数据丢失"><a href="#脑裂导致的数据丢失" class="headerlink" title="脑裂导致的数据丢失"></a>脑裂导致的数据丢失</h2><p><strong>问题：</strong>所谓的脑裂，就是指在主从集群中，同时有两个主节点，它们都能接收写请求。而脑裂最直接的影响，就是客户端不知道应该往哪个主节点写入数据，结果就是不同的客户端会往不同的主节点上写入数据。而且，严重的话，脑裂会进一步导致数据丢失。<br><strong>解决：</strong>设置min-slaves-to-write（主库连接的从库中 至少有 N 个从库）、min-slaves-max-lag=10（ 数据复制和同步的延迟不能超过10S） 如果master出现了脑裂与其他的slave失去了通信，master不能给指定数量的salve发送数据，slave超过10S没有给自己返回ack消息，master就会拒接客户端的写入。</p>
 ]]></content>
+      <tags>
+        <tag>redis</tag>
+        <tag>redis哨兵机制</tag>
+        <tag>redis高可用</tag>
+      </tags>
   </entry>
   <entry>
     <title>relay-log和主从复制</title>
