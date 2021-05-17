@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html class="theme-next gemini use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -85,7 +85,7 @@
 <meta property="og:url" content="https://julyzhuyi.github.io/index.html">
 <meta property="og:site_name" content="zhuyi的博客">
 <meta property="og:description" content="网页描述">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale">
 <meta property="article:author" content="zhuyi">
 <meta name="twitter:card" content="summary">
 
@@ -103,7 +103,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -135,7 +135,7 @@
 
 <meta name="generator" content="Hexo 5.4.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -179,7 +179,7 @@
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-首页">
+        <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
@@ -189,7 +189,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-关于">
+        <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
@@ -199,7 +199,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-标签">
+        <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
@@ -209,7 +209,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-分类">
+        <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
@@ -219,7 +219,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-归档">
+        <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
@@ -229,12 +229,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-留言板">
+        <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-newspaper-o"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            留言板
+            留言
           </a>
         </li>
       
@@ -247,7 +247,7 @@
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
-            Search
+            搜索
           </a>
         </li>
       
@@ -267,7 +267,7 @@
     </span>
     <div class="local-search-input-wrapper">
       <input autocomplete="off"
-             placeholder="Searching..." spellcheck="false"
+             placeholder="搜索..." spellcheck="false"
              type="text" id="local-search-input">
     </div>
   </div>
@@ -291,6 +291,154 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://julyzhuyi.github.io/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuyi的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/" itemprop="url">RedisCluster原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-17T14:15:26+08:00">
+                2021-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -334,9 +482,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-13T10:16:42+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-13T10:16:42+08:00">
                 2021-05-13
               </time>
             
@@ -346,6 +494,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -383,7 +553,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/05/13/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -462,9 +632,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-28T15:37:37+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-28T15:37:37+08:00">
                 2021-04-28
               </time>
             
@@ -474,6 +644,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -509,7 +701,7 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/04/28/relay-log%E5%92%8C%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -588,9 +780,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-27T14:29:27+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-27T14:29:27+08:00">
                 2021-04-27
               </time>
             
@@ -600,6 +792,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -638,7 +852,7 @@ statement   语句模
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/04/27/Mysql-binlog/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -717,9 +931,9 @@ statement   语句模
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-19T23:10:47+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-19T23:10:47+08:00">
                 2021-04-19
               </time>
             
@@ -729,6 +943,28 @@ statement   语句模
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -767,7 +1003,7 @@ ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输�
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2021/04/19/ARQ%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/#more" rel="contents">
-              Read more &raquo;
+              阅读全文 &raquo;
             </a>
           </div>
           <!--/noindex-->
@@ -848,24 +1084,33 @@ ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输�
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives">
+                <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
               
               
               <div class="site-state-item site-state-tags">
-                
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">7</span>
-                  <span class="site-state-item-name">tags</span>
-                
+                  <span class="site-state-item-name">标签</span>
+                </a>
               </div>
             
 
@@ -889,7 +1134,7 @@ ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输�
       
 
       
-
+      
     </div>
   </aside>
 
@@ -910,7 +1155,7 @@ ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输�
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -918,7 +1163,7 @@ ARQ，也可以是 Automatic Repeat Query 的缩写，是一种在数据传输�
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 

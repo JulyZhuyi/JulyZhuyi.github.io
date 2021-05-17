@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html class="theme-next gemini use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -85,10 +85,10 @@
 <meta property="og:url" content="https://julyzhuyi.github.io/2021/04/27/Mysql-binlog/index.html">
 <meta property="og:site_name" content="zhuyi的博客">
 <meta property="og:description" content="Binlog是什么二进制日志，用于记录数据库的写入性操作信息，以二进制的方式保存在磁盘。是Mysql的逻辑日志，并且由Server层进行记录，与存储引擎无关。&amp;nbsp;  Binlog的使用场景   主从复制：在Master端开启binlog，然后将binlog日志发送到各个Slave端，由Slave端重放Binlog最终达到主从一致   数据恢复：通过使用mysqlbinlog工具来恢复数据&amp;">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:locale">
 <meta property="og:image" content="https://julyzhuyi.github.io/2021/04/27/Mysql-binlog/mysqlbinlog.png">
 <meta property="article:published_time" content="2021-04-27T06:29:27.000Z">
-<meta property="article:modified_time" content="2021-05-17T05:55:10.636Z">
+<meta property="article:modified_time" content="2021-05-17T15:09:54.948Z">
 <meta property="article:author" content="zhuyi">
 <meta property="article:tag" content="mysql">
 <meta property="article:tag" content="binlog">
@@ -110,7 +110,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -142,7 +142,7 @@
 
 <meta name="generator" content="Hexo 5.4.0"></head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -185,7 +185,7 @@
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-首页">
+        <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
@@ -195,7 +195,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-关于">
+        <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
@@ -205,7 +205,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-标签">
+        <li class="menu-item menu-item-tags">
           <a href="/tags/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
@@ -215,7 +215,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-分类">
+        <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
@@ -225,7 +225,7 @@
         </li>
       
         
-        <li class="menu-item menu-item-归档">
+        <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
@@ -235,12 +235,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-留言板">
+        <li class="menu-item menu-item-guestbook">
           <a href="/guestbook" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-newspaper-o"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            留言板
+            留言
           </a>
         </li>
       
@@ -253,7 +253,7 @@
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
             
-            Search
+            搜索
           </a>
         </li>
       
@@ -273,7 +273,7 @@
     </span>
     <div class="local-search-input-wrapper">
       <input autocomplete="off"
-             placeholder="Searching..." spellcheck="false"
+             placeholder="搜索..." spellcheck="false"
              type="text" id="local-search-input">
     </div>
   </div>
@@ -338,9 +338,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-04-27T14:29:27+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-27T14:29:27+08:00">
                 2021-04-27
               </time>
             
@@ -350,6 +350,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -497,10 +519,10 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            站点概览
           </li>
         </ul>
       
@@ -518,24 +540,33 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
             
               <div class="site-state-item site-state-posts">
               
-                <a href="/archives">
+                <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">4</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
             
 
             
               
               
               <div class="site-state-item site-state-tags">
-                
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">7</span>
-                  <span class="site-state-item-name">tags</span>
-                
+                  <span class="site-state-item-name">标签</span>
+                </a>
               </div>
             
 
@@ -575,7 +606,7 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
       
 
       
-
+      
     </div>
   </aside>
 
@@ -596,7 +627,7 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
 </div>
 
 
-  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
 
@@ -604,7 +635,7 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
 
 
 
-  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
 
 
 
