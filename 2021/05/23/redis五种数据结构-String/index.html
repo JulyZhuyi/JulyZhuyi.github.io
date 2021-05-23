@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="redis,redis数据结构," />
 
 
 
@@ -79,14 +79,18 @@
 
 
 
-<meta name="description" content="网页描述">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zhuyi的博客">
-<meta property="og:url" content="https://julyzhuyi.github.io/archives/index.html">
+<meta name="description" content="一、简介Redis自定义了字符串类型(SDS，全称Simple Dynamic Strings)。typedef char *sds; 二、SDS详解sds header结构定义&#x2F;* Note: sdshdr5 is never used, we just access the flags byte directly.* However is here to document the layout">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis五种数据结构-String">
+<meta property="og:url" content="https://julyzhuyi.github.io/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-String/index.html">
 <meta property="og:site_name" content="zhuyi的博客">
-<meta property="og:description" content="网页描述">
+<meta property="og:description" content="一、简介Redis自定义了字符串类型(SDS，全称Simple Dynamic Strings)。typedef char *sds; 二、SDS详解sds header结构定义&#x2F;* Note: sdshdr5 is never used, we just access the flags byte directly.* However is here to document the layout">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-05-23T09:08:35.000Z">
+<meta property="article:modified_time" content="2021-05-23T09:50:05.781Z">
 <meta property="article:author" content="zhuyi">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="redis数据结构">
 <meta name="twitter:card" content="summary">
 
 
@@ -117,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="https://julyzhuyi.github.io/archives/"/>
+  <link rel="canonical" href="https://julyzhuyi.github.io/2021/05/23/redis五种数据结构-String/"/>
 
 
 
 
 
-  <title>归档 | zhuyi的博客</title>
+  <title>redis五种数据结构-String | zhuyi的博客</title>
   
 
 
@@ -142,7 +146,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -290,259 +294,221 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://julyzhuyi.github.io/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-String/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuyi的博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">redis五种数据结构-String</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-23T17:08:35+08:00">
+                2021-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 6 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2021">2021</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-String/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-String</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-23T17:08:35+08:00"
-              content="2021-05-23" >
-          05-23
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/" itemprop="url">
-              
-                <span itemprop="name">RedisCluster原理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-17T14:15:26+08:00"
-              content="2021-05-17" >
-          05-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>Redis自定义了字符串类型(SDS，全称Simple Dynamic Strings)。<br>typedef char *sds;</p>
+<h1 id="二、SDS详解"><a href="#二、SDS详解" class="headerlink" title="二、SDS详解"></a>二、SDS详解</h1><h2 id="sds-header结构定义"><a href="#sds-header结构定义" class="headerlink" title="sds header结构定义"></a>sds header结构定义</h2><pre><code>/* Note: sdshdr5 is never used, we just access the flags byte directly.* However is here to document the layout of type 5 SDS strings. */  
 
-        
-        
+struct __attribute__ ((__packed__)) sdshdr5 &#123;
+unsigned char flags; /* 3 lsb of type, and 5 msb of string length */
+char buf[];
+&#125;;  
 
-        
+struct __attribute__ ((__packed__)) sdshdr8 &#123;
+uint8_t len; /* used */
+uint8_t alloc; /* excluding the header and null terminator */
+unsigned char flags; /* 3 lsb of type, 5 unused bits */
+char buf[];
+&#125;;  
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+struct __attribute__ ((__packed__)) sdshdr16 &#123;
+uint16_t len; /* used */
+uint16_t alloc; /* excluding the header and null terminator */
+unsigned char flags; /* 3 lsb of type, 5 unused bits */
+char buf[];
+&#125;;  
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/13/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/" itemprop="url">
-              
-                <span itemprop="name">redis哨兵机制</span>
-              
-            </a>
-        
-      </h2>
+struct __attribute__ ((__packed__)) sdshdr32 &#123;
+uint32_t len; /* used */
+uint32_t alloc; /* excluding the header and null terminator */
+unsigned char flags; /* 3 lsb of type, 5 unused bits */
+char buf[];
+&#125;;  
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-13T10:16:42+08:00"
-              content="2021-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+struct __attribute__ ((__packed__)) sdshdr64 &#123;
+uint64_t len; /* used */
+uint64_t alloc; /* excluding the header and null terminator */
+unsigned char flags; /* 3 lsb of type, 5 unused bits */
+char buf[];
+&#125;;  
+</code></pre>
+<p>sds 采用一段连续的内存空间来存储动态字符串，即 header + str 的形式。<strong>attribute</strong> ((packed))是为了让编译器使用紧凑模式来分配内存，不对struct中的字段进行内存对齐，以此保证 header 和 sds 的数据部分紧紧的相邻，否则，不能按照固定的偏移来获取 flags 字段。<br>当定义了 sds* s 后，使用 s[-1] 就可以获得 flag 的值，这样就知道了这个 sds 属于哪种类型。</p>
+<h2 id="sds-header结构详解"><a href="#sds-header结构详解" class="headerlink" title="sds header结构详解"></a>sds header结构详解</h2><p>len: 字符串真正的长度（不包含NULL结束符在内）<br>alloc: 字符串的最大容量<br>flags: 总是包含一个字节，其中低三位表示header的类型<br>sdshdr5与其他几个header结构不同，不包含len和alloc。sdshdr5长度使用flags的高五位来存储。因此，它不能为字符串分配额外的空间，如果字符串要动态增长，那么它就必然要重新分配内存才行。所以，sdshdr5更适合存储静态的短字符串（长度小于32）。    </p>
+<h2 id="sds-header优点"><a href="#sds-header优点" class="headerlink" title="sds header优点"></a>sds header优点</h2><p>sds header其实隐藏在真正字符串的数据前面，这样一个定义，有如下好处：<br>a.hheader和数据相邻，而不用分成两块内存空间来单独分配。这有利于减少内存碎片，提高存储效率（memory efficiency）。<br>b.虽然header有多个类型，但sds可以用统一的char *来表达。且它与传统的C语言字符串保持类型兼容。  </p>
+<h2 id="SDS数组动态分配策略"><a href="#SDS数组动态分配策略" class="headerlink" title="SDS数组动态分配策略"></a>SDS数组动态分配策略</h2><h3 id="空间预分配"><a href="#空间预分配" class="headerlink" title="空间预分配"></a>空间预分配</h3><ul>
+<li>当SDS的len属性长度小于1MB时，redis会分配和len相同长度的free空间。   </li>
+<li>当SDS的len属性长度大于1MB时，程序将多分配1M的未使用空间。</li>
+</ul>
+<h3 id="惰性空间"><a href="#惰性空间" class="headerlink" title="惰性空间"></a>惰性空间</h3><p>redis的内存回收采用惰性回收，字符串变短不会立即交还操作系统，先留着以便之后马上要使用。短暂的持有资源，既可以充分利用资源，也可以不浪费资源。   </p>
+<h2 id="SDS的特点"><a href="#SDS的特点" class="headerlink" title="SDS的特点"></a>SDS的特点</h2><ul>
+<li>二进制安全（Binary Safe），sds能存储任意二进制数据  </li>
+<li>与传统的C语言字符串类型兼容   </li>
+<li>预分配空间，可以懒惰释放，在内存紧张的时候也可以缩减不需要的内存  </li>
+<li>常数复杂度获取字符串长度    </li>
+<li>杜绝缓冲区溢出，边界检查</li>
+</ul>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/04/28/relay-log%E5%92%8C%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" itemprop="url">
-              
-                <span itemprop="name">relay-log和主从复制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-04-28T15:37:37+08:00"
-              content="2021-04-28" >
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/04/27/Mysql-binlog/" itemprop="url">
-              
-                <span itemprop="name">mysql binlog</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-04-27T14:29:27+08:00"
-              content="2021-04-27" >
-          04-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/04/19/ARQ%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/" itemprop="url">
-              
-                <span itemprop="name">ARQ协议</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-04-19T23:10:47+08:00"
-              content="2021-04-19" >
-          04-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+            <a href="/tags/redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># redis数据结构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/" rel="next" title="RedisCluster原理">
+                <i class="fa fa-chevron-left"></i> RedisCluster原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -550,6 +516,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -570,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -631,6 +610,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81SDS%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">二、SDS详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sds-header%E7%BB%93%E6%9E%84%E5%AE%9A%E4%B9%89"><span class="nav-number">2.1.</span> <span class="nav-text">sds header结构定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sds-header%E7%BB%93%E6%9E%84%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.2.</span> <span class="nav-text">sds header结构详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sds-header%E4%BC%98%E7%82%B9"><span class="nav-number">2.3.</span> <span class="nav-text">sds header优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDS%E6%95%B0%E7%BB%84%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5"><span class="nav-number">2.4.</span> <span class="nav-text">SDS数组动态分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E9%A2%84%E5%88%86%E9%85%8D"><span class="nav-number">2.4.1.</span> <span class="nav-text">空间预分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%83%B0%E6%80%A7%E7%A9%BA%E9%97%B4"><span class="nav-number">2.4.2.</span> <span class="nav-text">惰性空间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDS%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.5.</span> <span class="nav-text">SDS的特点</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -771,6 +766,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
