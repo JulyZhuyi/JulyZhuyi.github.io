@@ -68,6 +68,106 @@ show binlog events in &#39;binlog.000017&#39;; //查看具体一个binlog文件�
       </tags>
   </entry>
   <entry>
+    <title>RedisCluster原理</title>
+    <url>/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>主从复制需人工介入，不能自动化完成，即不能达到高可用<br>业务需要更高的QPS，而主从复制中单机的QPS可能无法满足业务需求</p>
+<h1 id="二、基本原理"><a href="#二、基本原理" class="headerlink" title="二、基本原理"></a>二、基本原理</h1><h2 id="1、基本架构"><a href="#1、基本架构" class="headerlink" title="1、基本架构"></a>1、基本架构</h2><p>Redis Cluster中有多个节点，每个节点都负责进行数据读写操作，每个节点之间会进行通信。<br><img src="framework.png" alt="framework">  </p>
+<h3 id="结点状态信息结构"><a href="#结点状态信息结构" class="headerlink" title="结点状态信息结构"></a>结点状态信息结构</h3><p>Cluster中的每个节点节点通过Gossip协议传播信息，都维护一份当前整个集群的状态，状态信息主要包括：<br>    a. 当前集群状态<br>    b. 集群中各节点所负责的slots信息，及其migrate状态<br>    c. 集群中各节Gossip协议点的master-slave状态<br>    d. 集群中各节点的存活状态及不可达投票  </p>
+<h3 id="Gossip协议介绍"><a href="#Gossip协议介绍" class="headerlink" title="Gossip协议介绍"></a>Gossip协议介绍</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><blockquote>
+<p>gossip 协议（gossip protocol）又称 epidemic 协议（epidemic protocol），是基于流行病传播方式的节点或者进程之间信息交换的协议。<br>在分布式系统中被广泛使用，比如我们可以使用 gossip 协议来确保网络中所有节点的数据一样。<br>gossip protocol 最初是由施乐公司帕洛阿尔托研究中心（Palo Alto Research Center）的研究员艾伦·德默斯（Alan Demers）于1987年创造的。          </p>
+</blockquote>
+<h4 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h4><p>是由种子节点发起，当一个种子节点有状态需要更新到网络中的其他节点时，它会随机的选择周围几个节点散播消息，收到消息的节点也会重复该过程，直至最终网络中所有的节点都收到了消息。这个过程可能需要一定的时间，由于不能保证某个时刻所有节点都收到消息，但是理论上最终所有节点都会收到消息，因此它是一个最终一致性协议。</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><h5 id="消息的延迟"><a href="#消息的延迟" class="headerlink" title="消息的延迟"></a>消息的延迟</h5><p>由于 Gossip 协议中，节点只会随机向少数几个节点发送消息，消息最终是通过多个轮次的散播而到达全网的，因此使用 Gossip 协议会造成不可避免的消息延迟。不适合用在对实时性要求较高的场景下。</p>
+<h5 id="消息冗余"><a href="#消息冗余" class="headerlink" title="消息冗余"></a>消息冗余</h5><p>Gossip 协议规定，节点会定期随机选择周围节点发送消息，而收到消息的节点也会重复该步骤，因此就不可避免的存在消息重复发送给同一节点的情况，造成了消息的冗余，同时也增加了收到消息的节点的处理压力。而且，由于是定期发送，因此，即使收到了消息的节点还会反复收到重复消息，加重了消息的冗余。</p>
+<h5 id="拜占庭问题"><a href="#拜占庭问题" class="headerlink" title="拜占庭问题"></a>拜占庭问题</h5><p>即如果有一个恶意传播消息的节点，gossip协议的分布式系统就会出问题<br>&nbsp; </p>
+<h2 id="2、数据分片"><a href="#2、数据分片" class="headerlink" title="2、数据分片"></a>2、数据分片</h2><p>采用虚拟槽分区的方式。RedisCluster中有一个16384长度的槽，他们的编号为0、1、2、3……16382、16383。这个槽是一个虚拟的槽，并不是真正存在的。正常工作的时候，Redis Cluster中的每个Master节点都会负责一部分的槽，当有某个key被映射到某个Master负责的槽，那么这个Master负责为这个key提供服务，至于哪个Master节点负责哪个槽，这是可以由用户指定的，也可以在初始化的时候自动生成（redis-trib.rb脚本）。在Redis Cluster中，只有Master才拥有槽的所有权，如果是某个Master的slave，这个slave只负责槽的使用，但是没有所有权。具体步骤如下：<br>（1）把16384槽按照节点数量进行平均分配，由节点进行管理<br>（2）对每个key按照CRC16规则进行hash运算<br>（3）把hash结果对16383进行取余<br>（4）把余数发送给Redis节点<br>（5）节点接收到数据，验证是否在自己管理的槽编号的范围<br>    如果在自己管理的槽编号范围内，则把数据保存到数据槽中，然后返回执行结果<br>    如果在自己管理的槽编号范围外，则会把数据发送给正确的节点，由正确的节点来把数据保存在对应的槽中</p>
+<h2 id="3、节点的槽指派信息"><a href="#3、节点的槽指派信息" class="headerlink" title="3、节点的槽指派信息"></a>3、节点的槽指派信息</h2><p>clusterNode结构记录了节点负责处理那些槽：<br>struct clusterNode {<br>//…<br>unsignedchar slots[16384/8];<br>};<br>slots属性是一个二进制位数组(bit array)，数组的长度为16384/8=2048个字节，共包含16384个二进制位。<br>Master节点用bit来标识对于某个槽自己是否拥有。比如对于编号为1的槽，Master只要判断slots[1]是否为1，时间复杂度为O（1）。</p>
+<h2 id="4、集群所有槽的指派信息"><a href="#4、集群所有槽的指派信息" class="headerlink" title="4、集群所有槽的指派信息"></a>4、集群所有槽的指派信息</h2><p>将所有槽的指派信息保存在clusterState.slots数组里，若要检查槽i是否已被指派，只需访问clusterState.slots[i]的值即可，复杂度仅为O（1）。</p>
+<h2 id="5、请求重定向"><a href="#5、请求重定向" class="headerlink" title="5、请求重定向"></a>5、请求重定向</h2><p>由于每个节点只负责部分slot，并且slot也可能从一个节点迁移到另一节点，造成客户端有可能会向错误的节点发起请求。因此需要有一种机制来对其进行发现和修正，这就是请求重定向。有两种不同的重定向场景：</p>
+<h3 id="MOVED"><a href="#MOVED" class="headerlink" title="MOVED"></a>MOVED</h3><pre><code>a.客户端向Redis Cluster的任意节点发送命令，接收命令的节点会根据CRC16规则进行hash运算与16383取余，计算自己的槽和对应节点
+b.若请求的key对应的槽不在自己的节点上，将查看自身内部所保存的哈希槽到节点ID的映射记录，则向客户端返回moved重定向异常。
+c.客户端接收到节点返回的结果，如果是moved异常，则从moved异常中获取目标节点的信息
+d.客户端向目标节点发送命令，获取命令执行结果
+</code></pre>
+<h3 id="ASK"><a href="#ASK" class="headerlink" title="ASK"></a>ASK</h3><pre><code>a.客户端向目标节点发送命令，目标节点中的槽已经迁移支别的节点上了，此时目标节点会返回ask转向给客户端
+b.客户端向新的节点发送Asking命令给新的节点，然后再次向新节点发送命令
+c.新节点执行命令，把命令执行结果返回给客户端
+</code></pre>
+<p>在对集群进行扩容和缩容时，需要对槽及槽中数据进行迁移，当客户端向某个节点发送命令，节点向客户端返回moved异常，告诉客户端数据对应的槽的节点信息。如果此时正在进行集群扩展或者缩空操作，当客户端向正确的节点发送命令时，槽及槽中数据已经被迁移到别的节点了，就会返回ask，这就是ask重定向机制。 </p>
+<h2 id="6、数据迁移"><a href="#6、数据迁移" class="headerlink" title="6、数据迁移"></a>6、数据迁移</h2><p>当 槽X 从NodeA向NodeB迁移时，NodeA和NodeB都会有这个槽X，NodeA上槽X的状态设置为MIGRATING，NodeB上槽X的状态被设置为IMPORTING。<br><img src="cluster.jpg" alt="cluster data">  </p>
+<h2 id="7、故障发现"><a href="#7、故障发现" class="headerlink" title="7、故障发现"></a>7、故障发现</h2><p>Redis Cluster通过ping/pong消息实现故障发现，不需要sentinel<br>ping/pong不仅能传递节点与槽的对应消息，也能传递其他状态，比如：节点主从状态，节点故障等<br>分为主观下线和客观下线</p>
+<h3 id="主观下线"><a href="#主观下线" class="headerlink" title="主观下线"></a>主观下线</h3><pre><code>a.节点1定期发送ping消息给节点2
+b.如果发送成功，代表节点2正常运行，节点2会响应PONG消息给节点1，节点1更新与节点2的最后通信时间
+c.如果发送失败，则节点1与节点2之间的通信异常判断连接，在下一个定时任务周期时，仍然会与节点2发送ping消息
+d.如果节点1发现与节点2最后通信时间超过node-timeout，则把节点2标识为pfail状态
+</code></pre>
+<h3 id="客观下线"><a href="#客观下线" class="headerlink" title="客观下线"></a>客观下线</h3><pre><code>a.某个节点接收到其他节点发送的ping消息，如果接收到的ping消息中包含了其他pfail节点，这个节点会将主观下线的消息内容添加到自身的故障列表中，故障列表中包含了当前节点接收到的每一个节点对其他节点的状态信息
+b.当前节点把主观下线的消息内容添加到自身的故障列表之后，会尝试对故障节点进行客观下线操作
+</code></pre>
+<h2 id="8、故障转移"><a href="#8、故障转移" class="headerlink" title="8、故障转移"></a>8、故障转移</h2><pre><code>a.偏移量最大的从节点具备优先级成为主节点的条件
+b.对选举出来的多个从节点进行投票，选出新的主节点
+c.当前从节点变成主节点(slaveof no one)，执行cluster del slot撤销故障主节点负责的槽，并执行cluster add slot把这些槽分配给自己
+d.向集群广播自己的pong消息，表明已经替换了故障从节点
+</code></pre>
+<h1 id="三、RedisCluster的缺点"><a href="#三、RedisCluster的缺点" class="headerlink" title="三、RedisCluster的缺点"></a>三、RedisCluster的缺点</h1><p><strong>缺点：</strong>当节点数量很多时，性能不会很高<br><strong>解决：</strong>使用智能客户端。智能客户端知道由哪个节点负责管理哪个槽，而且当节点与槽的映射关系发生改变时，客户端也会知道这个改变，这是一种非常高效的方式</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+        <tag>redis高可用</tag>
+        <tag>redis cluster</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>redis五种数据结构-List</title>
+    <url>/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-List/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在Redis3.2之前，List采用ZipList（压缩链表）和LinkedList（双向链表）实现；<br>在Redis3.2之后，List采用QuickList  </p>
+<h1 id="ZipList"><a href="#ZipList" class="headerlink" title="ZipList"></a>ZipList</h1><h2 id="ziplist的数据结构"><a href="#ziplist的数据结构" class="headerlink" title="ziplist的数据结构"></a>ziplist的数据结构</h2><p><img src="ziplist.image" alt="ziplist"><br>其中黄色区域用来表示列表的元数据，绿色区域就是列表中具体的元素，ziplist是使用连续的内存块存储的  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">zlbytes：表示当前 list 的存储元素的总长度。</span><br><span class="line">zllen：表示当前 list 存储的元素的个数。</span><br><span class="line">zltail：表示当前 list 的头结点的地址，通过 zltail 就是可以实现 list 的遍历。</span><br><span class="line">zlend：表示当前 list 的结束标识。</span><br><span class="line">entry：表示存储实际数据的节点，每个 entry 代表一个元素。</span><br><span class="line">previours_entry_length: 表示当前节点元素的长度，通过其长度可以计算出下一个元素的位置。</span><br><span class="line">encoding：表示元素的编码格式。</span><br><span class="line">content：表示实际存储的元素内容。   </span><br></pre></td></tr></table></figure>
+<h2 id="ziplist转化成双向链表的条件"><a href="#ziplist转化成双向链表的条件" class="headerlink" title="ziplist转化成双向链表的条件"></a>ziplist转化成双向链表的条件</h2><p>如果添加的字符串元素长度超过默认值64<br>zip包含的节点数超过默认值512 这两个条件是可以修改的，在redis.conf中   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">list-max-ziplist-value 64   </span><br><span class="line">list-max-ziplist-entries 512 </span><br></pre></td></tr></table></figure>
+
+<h2 id="ziplist的缺点"><a href="#ziplist的缺点" class="headerlink" title="ziplist的缺点"></a>ziplist的缺点</h2><h3 id="连锁更新问题"><a href="#连锁更新问题" class="headerlink" title="连锁更新问题"></a>连锁更新问题</h3><p>在 ziplist 中，每个 zlentry 都存储着前一个节点所占的字节数，而这个数值又是变长编码的。<br>假设存在一个压缩列表，其包含 e1、e2、e3、e4…..，e1 节点的大小为253字节，那么e2.prevrawlen的大小为 1 字节，如果此时在 e2 与 e1 之间插入了一个新节点 e，e 编码后的整体长度（包含 e1 的长度）为 254 字节，此时 e2.prevrawlen 就需要扩充为 5 字节；如果 e2 的整体长度变化又引起了 e3.prevrawlen 的存储长度变化，那么 e3 也需要扩…….如此递归直到表尾节点或者某一个节点的 prevrawlen 本身长度可以容纳前一个节点的变化。其中每一次扩充都需要进行空间再分配操作。删除节点亦是如此，只要引起了操作节点之后的节点的 prevrawlen 的变化，都可能引起连锁更新，引发内存realloc。<br>连锁更新在最坏情况下需要进行 N 次空间再分配，而每次空间再分配的最坏时间复杂度为 O(N)，因此连锁更新的总体时间复杂度是 O(N^2)。<br>基于上述来看ziplist的缺点大于优点，所以3.2版本之后采用了另外一个数据结构为quicklist    </p>
+<h1 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h1><h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>由一系列不连续的内存块通过指针连接起来的双向链表<br><img src="linkedlist.png" alt="linkedlist"><br>各部分作用说明：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">head：表示 List 的头结点；通过其可以找到 List 的头节点   </span><br><span class="line">tail：表示 List 的尾节点；通过其可以找到 List 的尾节点    </span><br><span class="line">len：表示 List 存储的元素个数     </span><br><span class="line">dup：表示用于复制元素的函数  </span><br><span class="line">free：表示用于释放元素的函数  </span><br><span class="line">match：表示用于对比元素的函数    </span><br></pre></td></tr></table></figure>
+<h1 id="QuickList"><a href="#QuickList" class="headerlink" title="QuickList"></a>QuickList</h1><h2 id="实现原理-1"><a href="#实现原理-1" class="headerlink" title="实现原理"></a>实现原理</h2><p>ziplist会引入频繁的内存申请和释放，而linkedlist由于指针也会造成内存的浪费，而且每个节点是单独存在的，会造成很多内存碎片，所以结合两个结构的特点，设计了quickList。    </p>
+<p>quickList是ziplist组成的双向链表。每个节点使用 ziplist 来保存数据。本质上来说，quicklist 里面保存着一个一个小的 ziplist。结构如下：<br><img src="quicklist.image" alt="quicklist"><br>每一个ziplist都是一个很小的集合，ziplist太短，内存碎片越多，太长，分配大块连续内存空间的难度就越大，这个范围也是可以配置的，如下：<br>-5: 每个quicklist节点上的ziplist大小不能超过64 Kb<br>-4: 每个quicklist节点上的ziplist大小不能超过32 Kb<br>-3: 每个quicklist节点上的ziplist大小不能超过16 Kb<br>-2: 每个quicklist节点上的ziplist大小不能超过8 Kb （默认值）<br>-1: 每个quicklist节点上的ziplist大小不能超过4 Kb     </p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><pre><code>typedef struct quicklistNode&#123;    
+  struct quicklistNode *prev;  //指向链表前一个节点的指针   
+  struct quicklistNode *next;  //指向链表后一个节点的指针  
+  unsigned char *zl; //数据指针。如果当前节点的数据被压缩，它指向一个ziplist结构；否则指向一个quickListZF结构
+  unsigned int sz;/表示zl指向ziplist的总大小，需要注意的是如果ziplist被压缩了，那么这个sz的值仍然是压缩前的ziplist大小。
+  unsigned int count : 16; //ziplist包含的数据项的个数  
+  unsigned int encoding : 2; //表示ziplist是否被压缩，目前只有两种取值：2表示被压缩了（而且用的是LZF压缩算法），1表示没有压缩。  
+  unsigned int container : 2;//是个预留字段，本来设计是用来表明一个quicklist节点下面是直接存数据，还是使用ziplist存数据，或者用其它的结构来存数据（用作一个数据容器，所以叫container）。但是，在目前的实现中，这个值是一个固定的值2，表示使用ziplist作为数据容器。
+  unsigned int recompress : 1; //当我们使用类似lindex这样的命令查看了某一项本来压缩的数据时，需要把数据暂时解压，这时就设置recompress=1做一个标记，等有机会再把数据重新压缩。   
+  unsigned int attempted_compress : 1; //只对Redis的自动化测试程序有用 
+  unsigned int extra : 10; //其它扩展字段&#125;    
+</code></pre>
+<p>当quicklistNode指向的ziplist被压缩的情况下，上述的zl成员会指向如下的quicklistLZF结构：</p>
+<pre><code>typedef struct quicklistLZF&#123;    
+  unsigned int sz; //压缩后的 ziplist 的长度   
+  char compressed[]; //compressed为压缩后的ziplist的实际内容   
+&#125;quicklistLZF; 
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><pre><code>1. quicklist 不会对过小的 ziplist 进行压缩，这个值为 MIN_COMPRESS_BYTES，目前是48   
+2. quicklist 在对 ziplist 进行压缩后，会对比压缩后的长度和未压缩的长度，若压缩后的长度-未压缩的长度 &lt; 8(MIN_COMPRESS_IMPROVE)，则使用未压缩的数据  
+3. quicklist 的头节点和尾节点在任何时候都不会被压缩，因此可以保证将数据插入列表的头或者尾是高效的。     
+4. 插入一个数据到压缩的节点时，需要先对节点的 ziplist 整个进行解压，插入后再次进行压缩      
+5. 对中间某个已满的节点进行插入操作会导致此节点（假设此节点为 node）的 ziplist 在插入点进行分裂，此时这个 ziplist 会变成两个 ziplist（新建一个 quicklistNode 保存多出来的 ziplist，假设此节点为 newnode），然后将数据插入 node 指向的 ziplist 的末尾，然后对 node 进行 _quicklistMergeNodes 操作
+</code></pre>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>redis</tag>
+        <tag>redis数据结构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>redis五种数据结构-String</title>
     <url>/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-String/</url>
     <content><![CDATA[<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>Redis自定义了字符串类型(SDS，全称Simple Dynamic Strings)。<br>typedef char *sds;</p>
@@ -128,59 +228,6 @@ char buf[];
       <tags>
         <tag>redis</tag>
         <tag>redis数据结构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RedisCluster原理</title>
-    <url>/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/</url>
-    <content><![CDATA[<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>主从复制需人工介入，不能自动化完成，即不能达到高可用<br>业务需要更高的QPS，而主从复制中单机的QPS可能无法满足业务需求</p>
-<h1 id="二、基本原理"><a href="#二、基本原理" class="headerlink" title="二、基本原理"></a>二、基本原理</h1><h2 id="1、基本架构"><a href="#1、基本架构" class="headerlink" title="1、基本架构"></a>1、基本架构</h2><p>Redis Cluster中有多个节点，每个节点都负责进行数据读写操作，每个节点之间会进行通信。<br><img src="framework.png" alt="framework">  </p>
-<h3 id="结点状态信息结构"><a href="#结点状态信息结构" class="headerlink" title="结点状态信息结构"></a>结点状态信息结构</h3><p>Cluster中的每个节点节点通过Gossip协议传播信息，都维护一份当前整个集群的状态，状态信息主要包括：<br>    a. 当前集群状态<br>    b. 集群中各节点所负责的slots信息，及其migrate状态<br>    c. 集群中各节Gossip协议点的master-slave状态<br>    d. 集群中各节点的存活状态及不可达投票  </p>
-<h3 id="Gossip协议介绍"><a href="#Gossip协议介绍" class="headerlink" title="Gossip协议介绍"></a>Gossip协议介绍</h3><h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><blockquote>
-<p>gossip 协议（gossip protocol）又称 epidemic 协议（epidemic protocol），是基于流行病传播方式的节点或者进程之间信息交换的协议。<br>在分布式系统中被广泛使用，比如我们可以使用 gossip 协议来确保网络中所有节点的数据一样。<br>gossip protocol 最初是由施乐公司帕洛阿尔托研究中心（Palo Alto Research Center）的研究员艾伦·德默斯（Alan Demers）于1987年创造的。          </p>
-</blockquote>
-<h4 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h4><p>是由种子节点发起，当一个种子节点有状态需要更新到网络中的其他节点时，它会随机的选择周围几个节点散播消息，收到消息的节点也会重复该过程，直至最终网络中所有的节点都收到了消息。这个过程可能需要一定的时间，由于不能保证某个时刻所有节点都收到消息，但是理论上最终所有节点都会收到消息，因此它是一个最终一致性协议。</p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><h5 id="消息的延迟"><a href="#消息的延迟" class="headerlink" title="消息的延迟"></a>消息的延迟</h5><p>由于 Gossip 协议中，节点只会随机向少数几个节点发送消息，消息最终是通过多个轮次的散播而到达全网的，因此使用 Gossip 协议会造成不可避免的消息延迟。不适合用在对实时性要求较高的场景下。</p>
-<h5 id="消息冗余"><a href="#消息冗余" class="headerlink" title="消息冗余"></a>消息冗余</h5><p>Gossip 协议规定，节点会定期随机选择周围节点发送消息，而收到消息的节点也会重复该步骤，因此就不可避免的存在消息重复发送给同一节点的情况，造成了消息的冗余，同时也增加了收到消息的节点的处理压力。而且，由于是定期发送，因此，即使收到了消息的节点还会反复收到重复消息，加重了消息的冗余。</p>
-<h5 id="拜占庭问题"><a href="#拜占庭问题" class="headerlink" title="拜占庭问题"></a>拜占庭问题</h5><p>即如果有一个恶意传播消息的节点，gossip协议的分布式系统就会出问题<br>&nbsp; </p>
-<h2 id="2、数据分片"><a href="#2、数据分片" class="headerlink" title="2、数据分片"></a>2、数据分片</h2><p>采用虚拟槽分区的方式。RedisCluster中有一个16384长度的槽，他们的编号为0、1、2、3……16382、16383。这个槽是一个虚拟的槽，并不是真正存在的。正常工作的时候，Redis Cluster中的每个Master节点都会负责一部分的槽，当有某个key被映射到某个Master负责的槽，那么这个Master负责为这个key提供服务，至于哪个Master节点负责哪个槽，这是可以由用户指定的，也可以在初始化的时候自动生成（redis-trib.rb脚本）。在Redis Cluster中，只有Master才拥有槽的所有权，如果是某个Master的slave，这个slave只负责槽的使用，但是没有所有权。具体步骤如下：<br>（1）把16384槽按照节点数量进行平均分配，由节点进行管理<br>（2）对每个key按照CRC16规则进行hash运算<br>（3）把hash结果对16383进行取余<br>（4）把余数发送给Redis节点<br>（5）节点接收到数据，验证是否在自己管理的槽编号的范围<br>    如果在自己管理的槽编号范围内，则把数据保存到数据槽中，然后返回执行结果<br>    如果在自己管理的槽编号范围外，则会把数据发送给正确的节点，由正确的节点来把数据保存在对应的槽中</p>
-<h2 id="3、节点的槽指派信息"><a href="#3、节点的槽指派信息" class="headerlink" title="3、节点的槽指派信息"></a>3、节点的槽指派信息</h2><p>clusterNode结构记录了节点负责处理那些槽：<br>struct clusterNode {<br>//…<br>unsignedchar slots[16384/8];<br>};<br>slots属性是一个二进制位数组(bit array)，数组的长度为16384/8=2048个字节，共包含16384个二进制位。<br>Master节点用bit来标识对于某个槽自己是否拥有。比如对于编号为1的槽，Master只要判断slots[1]是否为1，时间复杂度为O（1）。</p>
-<h2 id="4、集群所有槽的指派信息"><a href="#4、集群所有槽的指派信息" class="headerlink" title="4、集群所有槽的指派信息"></a>4、集群所有槽的指派信息</h2><p>将所有槽的指派信息保存在clusterState.slots数组里，若要检查槽i是否已被指派，只需访问clusterState.slots[i]的值即可，复杂度仅为O（1）。</p>
-<h2 id="5、请求重定向"><a href="#5、请求重定向" class="headerlink" title="5、请求重定向"></a>5、请求重定向</h2><p>由于每个节点只负责部分slot，并且slot也可能从一个节点迁移到另一节点，造成客户端有可能会向错误的节点发起请求。因此需要有一种机制来对其进行发现和修正，这就是请求重定向。有两种不同的重定向场景：</p>
-<h3 id="MOVED"><a href="#MOVED" class="headerlink" title="MOVED"></a>MOVED</h3><pre><code>a.客户端向Redis Cluster的任意节点发送命令，接收命令的节点会根据CRC16规则进行hash运算与16383取余，计算自己的槽和对应节点
-b.若请求的key对应的槽不在自己的节点上，将查看自身内部所保存的哈希槽到节点ID的映射记录，则向客户端返回moved重定向异常。
-c.客户端接收到节点返回的结果，如果是moved异常，则从moved异常中获取目标节点的信息
-d.客户端向目标节点发送命令，获取命令执行结果
-</code></pre>
-<h3 id="ASK"><a href="#ASK" class="headerlink" title="ASK"></a>ASK</h3><pre><code>a.客户端向目标节点发送命令，目标节点中的槽已经迁移支别的节点上了，此时目标节点会返回ask转向给客户端
-b.客户端向新的节点发送Asking命令给新的节点，然后再次向新节点发送命令
-c.新节点执行命令，把命令执行结果返回给客户端
-</code></pre>
-<p>在对集群进行扩容和缩容时，需要对槽及槽中数据进行迁移，当客户端向某个节点发送命令，节点向客户端返回moved异常，告诉客户端数据对应的槽的节点信息。如果此时正在进行集群扩展或者缩空操作，当客户端向正确的节点发送命令时，槽及槽中数据已经被迁移到别的节点了，就会返回ask，这就是ask重定向机制。 </p>
-<h2 id="6、数据迁移"><a href="#6、数据迁移" class="headerlink" title="6、数据迁移"></a>6、数据迁移</h2><p>当 槽X 从NodeA向NodeB迁移时，NodeA和NodeB都会有这个槽X，NodeA上槽X的状态设置为MIGRATING，NodeB上槽X的状态被设置为IMPORTING。<br><img src="cluster.jpg" alt="cluster data">  </p>
-<h2 id="7、故障发现"><a href="#7、故障发现" class="headerlink" title="7、故障发现"></a>7、故障发现</h2><p>Redis Cluster通过ping/pong消息实现故障发现，不需要sentinel<br>ping/pong不仅能传递节点与槽的对应消息，也能传递其他状态，比如：节点主从状态，节点故障等<br>分为主观下线和客观下线</p>
-<h3 id="主观下线"><a href="#主观下线" class="headerlink" title="主观下线"></a>主观下线</h3><pre><code>a.节点1定期发送ping消息给节点2
-b.如果发送成功，代表节点2正常运行，节点2会响应PONG消息给节点1，节点1更新与节点2的最后通信时间
-c.如果发送失败，则节点1与节点2之间的通信异常判断连接，在下一个定时任务周期时，仍然会与节点2发送ping消息
-d.如果节点1发现与节点2最后通信时间超过node-timeout，则把节点2标识为pfail状态
-</code></pre>
-<h3 id="客观下线"><a href="#客观下线" class="headerlink" title="客观下线"></a>客观下线</h3><pre><code>a.某个节点接收到其他节点发送的ping消息，如果接收到的ping消息中包含了其他pfail节点，这个节点会将主观下线的消息内容添加到自身的故障列表中，故障列表中包含了当前节点接收到的每一个节点对其他节点的状态信息
-b.当前节点把主观下线的消息内容添加到自身的故障列表之后，会尝试对故障节点进行客观下线操作
-</code></pre>
-<h2 id="8、故障转移"><a href="#8、故障转移" class="headerlink" title="8、故障转移"></a>8、故障转移</h2><pre><code>a.偏移量最大的从节点具备优先级成为主节点的条件
-b.对选举出来的多个从节点进行投票，选出新的主节点
-c.当前从节点变成主节点(slaveof no one)，执行cluster del slot撤销故障主节点负责的槽，并执行cluster add slot把这些槽分配给自己
-d.向集群广播自己的pong消息，表明已经替换了故障从节点
-</code></pre>
-<h1 id="三、RedisCluster的缺点"><a href="#三、RedisCluster的缺点" class="headerlink" title="三、RedisCluster的缺点"></a>三、RedisCluster的缺点</h1><p><strong>缺点：</strong>当节点数量很多时，性能不会很高<br><strong>解决：</strong>使用智能客户端。智能客户端知道由哪个节点负责管理哪个槽，而且当节点与槽的映射关系发生改变时，客户端也会知道这个改变，这是一种非常高效的方式</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>redis</tag>
-        <tag>redis高可用</tag>
-        <tag>redis cluster</tag>
       </tags>
   </entry>
   <entry>
