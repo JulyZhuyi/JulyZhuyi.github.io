@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="HTTPS,网络," />
 
 
 
@@ -79,15 +79,21 @@
 
 
 
-<meta name="description" content="网页描述">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zhuyi的博客">
-<meta property="og:url" content="https://julyzhuyi.github.io/archives/index.html">
+<meta name="description" content="一、客户端发起HTTPS连接当用户在浏览器地址栏敲击https:&#x2F;&#x2F;www.xxxx.com时，浏览器先去DNS获取此url对应的ip，然后客户端连接上服务端的443端口，将此请求发送给到服务端，同时将支持的加密算法发给服务端。&amp;nbsp;  二、服务端发送证书服务端收到这套加密算法后，与自己支持的加密算法进行对比。如果不符合，就断开连接；如果符合，服务端就将CA证书发给客户端。证书中包括：证书颁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS建立连接详细过程">
+<meta property="og:url" content="https://julyzhuyi.github.io/2021/06/04/HTTPS%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/index.html">
 <meta property="og:site_name" content="zhuyi的博客">
-<meta property="og:description" content="网页描述">
+<meta property="og:description" content="一、客户端发起HTTPS连接当用户在浏览器地址栏敲击https:&#x2F;&#x2F;www.xxxx.com时，浏览器先去DNS获取此url对应的ip，然后客户端连接上服务端的443端口，将此请求发送给到服务端，同时将支持的加密算法发给服务端。&amp;nbsp;  二、服务端发送证书服务端收到这套加密算法后，与自己支持的加密算法进行对比。如果不符合，就断开连接；如果符合，服务端就将CA证书发给客户端。证书中包括：证书颁">
 <meta property="og:locale">
+<meta property="og:image" content="https://julyzhuyi.github.io/2021/06/04/HTTPS%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/https.png">
+<meta property="article:published_time" content="2021-06-04T02:52:55.000Z">
+<meta property="article:modified_time" content="2021-06-04T03:36:54.500Z">
 <meta property="article:author" content="zhuyi">
+<meta property="article:tag" content="HTTPS">
+<meta property="article:tag" content="网络">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://julyzhuyi.github.io/2021/06/04/HTTPS%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/https.png">
 
 
 
@@ -117,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://julyzhuyi.github.io/archives/"/>
+  <link rel="canonical" href="https://julyzhuyi.github.io/2021/06/04/HTTPS建立连接详细过程/"/>
 
 
 
 
 
-  <title>归档 | zhuyi的博客</title>
+  <title>HTTPS建立连接详细过程 | zhuyi的博客</title>
   
 
 
@@ -142,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -290,411 +296,178 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://julyzhuyi.github.io/2021/06/04/HTTPS%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuyi的博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">HTTPS建立连接详细过程</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-04T10:52:55+08:00">
+                2021-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 11 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">技术</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2021">2021</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/06/04/HTTPS%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E8%AF%A6%E7%BB%86%E8%BF%87%E7%A8%8B/" itemprop="url">
-              
-                <span itemprop="name">HTTPS建立连接详细过程</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-06-04T10:52:55+08:00"
-              content="2021-06-04" >
-          06-04
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/24/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-hash/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-hash</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-24T11:46:15+08:00"
-              content="2021-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/24/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zset/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-zset</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-24T11:46:10+08:00"
-              content="2021-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h1 id="一、客户端发起HTTPS连接"><a href="#一、客户端发起HTTPS连接" class="headerlink" title="一、客户端发起HTTPS连接"></a>一、客户端发起HTTPS连接</h1><p>当用户在浏览器地址栏敲击<a target="_blank" rel="noopener" href="https://www.xxxx.com时,浏览器先去dns获取此url对应的ip,然后客户端连接上服务端的443端口,将此请求发送给到服务端,同时将支持的加密算法发给服务端./">https://www.xxxx.com时，浏览器先去DNS获取此url对应的ip，然后客户端连接上服务端的443端口，将此请求发送给到服务端，同时将支持的加密算法发给服务端。</a><br>&nbsp; </p>
+<h1 id="二、服务端发送证书"><a href="#二、服务端发送证书" class="headerlink" title="二、服务端发送证书"></a>二、服务端发送证书</h1><p>服务端收到这套加密算法后，与自己支持的加密算法进行对比。如果不符合，就断开连接；如果符合，服务端就将CA证书发给客户端。证书中包括：证书颁发机构、使用机构、公钥、有效期、签名算法、签名hash算法、指纹算法、指纹等。<br>&nbsp; </p>
+<h1 id="三、客户端验证证书"><a href="#三、客户端验证证书" class="headerlink" title="三、客户端验证证书"></a>三、客户端验证证书</h1><h2 id="1、验证证书"><a href="#1、验证证书" class="headerlink" title="1、验证证书"></a>1、验证证书</h2><p>客户端验证收到的证书，包括发布机构是否合法、过期，证书中包含的网址是否与当前的网址一致等等。</p>
+<h2 id="2、生成随机数（此随机数是后面用的对称加密的私钥）"><a href="#2、生成随机数（此随机数是后面用的对称加密的私钥）" class="headerlink" title="2、生成随机数（此随机数是后面用的对称加密的私钥）"></a>2、生成随机数（此随机数是后面用的对称加密的私钥）</h2><p>客户端验证证书无误后（或者接受了不信任的证书），生成一个随机数，用服务端发来的证书中的公钥进行加密。如此一来，此随机数只有服务端的私钥才能解开。</p>
+<h2 id="3、生成握手信息"><a href="#3、生成握手信息" class="headerlink" title="3、生成握手信息"></a>3、生成握手信息</h2><p>用证书中的签名hash算法取握手信息的hash值，然后用生成的随机数对<strong>握手信息和握手信息的hash值</strong>进行加密，然后用公钥将随机数进行加密后，一起发送给服务端。其中计算握手信息的hash值，目的是为了保证传回到服务端的握手信息没有被篡改。<br>&nbsp; </p>
+<h1 id="四、服务端校验握手信息"><a href="#四、服务端校验握手信息" class="headerlink" title="四、服务端校验握手信息"></a>四、服务端校验握手信息</h1><p>服务端收到客户端传来的的用随机数加密的信息后，先用私钥解密随机数，然后用解密之后的随机数解密握手信息，获取握手信息和握手信息的hash值，计算自己发送的握手信息的hash值，与客户端传回来的进行对比验证。</p>
+<p>如果验证无误，同样使用随机数加密握手信息和握手信息hash值发回给到客户端<br>&nbsp; </p>
+<h1 id="五、客户端验证服务端的握手信息，完成握手"><a href="#五、客户端验证服务端的握手信息，完成握手" class="headerlink" title="五、客户端验证服务端的握手信息，完成握手"></a>五、客户端验证服务端的握手信息，完成握手</h1><p>客户端收到服务端发送过来的握手信息后，用开始自己生成的随机数进行解密，验证被随机数加密的握手信息和握手信息hash值。<br>验证无误后握手过程就完成了，服务端和客户端可以开始用那串随机数进行对称加密通信了<br>&nbsp;<br>&nbsp;<br><img src="https.png" alt="https">  </p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/24/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-set/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-set</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-24T11:46:03+08:00"
-              content="2021-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-List/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-List</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-23T17:57:53+08:00"
-              content="2021-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/23/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-String/" itemprop="url">
-              
-                <span itemprop="name">redis五种数据结构-String</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-23T17:08:35+08:00"
-              content="2021-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/17/RedisCluster%E5%8E%9F%E7%90%86/" itemprop="url">
-              
-                <span itemprop="name">RedisCluster原理</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-17T14:15:26+08:00"
-              content="2021-05-17" >
-          05-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/05/13/redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6/" itemprop="url">
-              
-                <span itemprop="name">redis哨兵机制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-05-13T10:16:42+08:00"
-              content="2021-05-13" >
-          05-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/04/28/relay-log%E5%92%8C%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" itemprop="url">
-              
-                <span itemprop="name">relay-log和主从复制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-04-28T15:37:37+08:00"
-              content="2021-04-28" >
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2021/04/27/Mysql-binlog/" itemprop="url">
-              
-                <span itemprop="name">mysql binlog</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2021-04-27T14:29:27+08:00"
-              content="2021-04-27" >
-          04-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+            <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/24/redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-hash/" rel="next" title="redis五种数据结构-hash">
+                <i class="fa fa-chevron-left"></i> redis五种数据结构-hash
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -702,6 +475,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -722,8 +499,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -783,6 +569,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%91%E8%B5%B7HTTPS%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.</span> <span class="nav-text">一、客户端发起HTTPS连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%91%E9%80%81%E8%AF%81%E4%B9%A6"><span class="nav-number">2.</span> <span class="nav-text">二、服务端发送证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6"><span class="nav-number">3.</span> <span class="nav-text">三、客户端验证证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6"><span class="nav-number">3.1.</span> <span class="nav-text">1、验证证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E7%94%9F%E6%88%90%E9%9A%8F%E6%9C%BA%E6%95%B0%EF%BC%88%E6%AD%A4%E9%9A%8F%E6%9C%BA%E6%95%B0%E6%98%AF%E5%90%8E%E9%9D%A2%E7%94%A8%E7%9A%84%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%9A%84%E7%A7%81%E9%92%A5%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2、生成随机数（此随机数是后面用的对称加密的私钥）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E7%94%9F%E6%88%90%E6%8F%A1%E6%89%8B%E4%BF%A1%E6%81%AF"><span class="nav-number">3.3.</span> <span class="nav-text">3、生成握手信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A0%A1%E9%AA%8C%E6%8F%A1%E6%89%8B%E4%BF%A1%E6%81%AF"><span class="nav-number">4.</span> <span class="nav-text">四、服务端校验握手信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%AA%8C%E8%AF%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E6%8F%A1%E6%89%8B%E4%BF%A1%E6%81%AF%EF%BC%8C%E5%AE%8C%E6%88%90%E6%8F%A1%E6%89%8B"><span class="nav-number">5.</span> <span class="nav-text">五、客户端验证服务端的握手信息，完成握手</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -923,6 +725,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
